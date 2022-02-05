@@ -1,12 +1,14 @@
 import pygame
 from sys import exit
 from random import randint, choice
+import time
 
 
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.falling = 1
+        self.falling = 0
+        print(type(self.falling))
         player_walk_1 = pygame.image.load('graphics/Player/player_walk_1.png').convert_alpha()
         player_walk_2 = pygame.image.load('graphics/Player/player_walk_2.png').convert_alpha()
         self.player_jump = pygame.image.load('graphics/Player/jump.png').convert_alpha()
@@ -22,10 +24,11 @@ class Player(pygame.sprite.Sprite):
             self.gravity = -20
 
     def apply_gravity(self):
-        self.gravity += 1
+        print("what happens here",self.gravity,self.rect.y )
+        if self.gravity < 13:
+            self.gravity += 1
         self.rect.y += self.gravity
-        self.falling = collision_sprite()
-        if self.rect.bottom >= 300:
+        if self.rect.bottom >= 300 and self.falling == 0: # 
             self.rect.bottom = 300
 
     def animation_state(self):
@@ -36,10 +39,11 @@ class Player(pygame.sprite.Sprite):
             if self.player_index >= len(self.player_walk): self.player_index = 0
             self.image = self.player_walk[int(self.player_index)]
 
-    def update(self):
+    def update(self): # getting called because of update
         self.player_input()
         self.apply_gravity()
         self.animation_state()
+
 
 
 class Obstacle(pygame.sprite.Sprite):
@@ -83,13 +87,17 @@ def display_score():
     screen.blit(surface_score, rect_score)
     return current_time
 
-
 def collision_sprite():
     if pygame.sprite.spritecollide(player.sprite, obstacle_group, False):
-        # obstacle_group.empty()
+    # obstacle_group.empty()
         return False
     else:
         return True
+
+
+#falling = 1 he should fall 
+#falling = 0 he should stay on the ground
+
 
 
 pygame.init()
@@ -165,12 +173,15 @@ while True:
         obstacle_group.update()
 
         # Collision
-        if not collision_sprite():
+
+        if not collision_sprite(): # check if collision, if it is then game-active - false\
+            player.sprite.falling = 1
+            # game_active = False
+        if player.sprite.rect.bottom > 1000:
             game_active = False
             obstacle_group.empty()
-        # if player.sprite.rect.bottom > 1000:
-        #     game_active = False
-        #     obstacle_group.empty()
+            player.sprite.falling = 0
+
 
     else:
         # Fill game over screen
