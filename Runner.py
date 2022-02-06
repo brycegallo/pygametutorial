@@ -8,7 +8,6 @@ class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         self.falling = 0
-        print(type(self.falling))
         player_walk_1 = pygame.image.load('graphics/Player/player_walk_1.png').convert_alpha()
         player_walk_2 = pygame.image.load('graphics/Player/player_walk_2.png').convert_alpha()
         self.player_jump = pygame.image.load('graphics/Player/jump.png').convert_alpha()
@@ -24,7 +23,6 @@ class Player(pygame.sprite.Sprite):
             self.gravity = -20
 
     def apply_gravity(self):
-        print("what happens here",self.gravity,self.rect.y )
         if self.gravity < 13:
             self.gravity += 1
         self.rect.y += self.gravity
@@ -89,7 +87,6 @@ def display_score():
 
 def collision_sprite():
     if pygame.sprite.spritecollide(player.sprite, obstacle_group, False):
-    # obstacle_group.empty()
         return False
     else:
         return True
